@@ -4,7 +4,6 @@ import de.robv.android.xposed.XposedHelpers
 import me.fycz.fqweb.utils.GlobalApp
 import me.fycz.fqweb.utils.findClass
 import me.fycz.fqweb.utils.findClassOrNull
-import me.fycz.fqweb.utils.findMethod
 
 /**
  * @author fengyue
@@ -33,22 +32,17 @@ object Config {
     private val dragonClassloader by lazy { GlobalApp.getClassloader() }
 
     val settingRecyclerAdapterClz: String by lazy {
-        when (versionCode) {
-            523 -> "com.dragon.read.base.recyler.c"
-            57932 -> "com.dragon.read.recyler.c"
-            58732 -> "com.dragon.read.recyler.d"
-            else -> {
-                val settingClz = "com.dragon.read.component.biz.impl.mine.settings.SettingsActivity"
+        when {
+            versionCode == 523 -> "com.dragon.read.base.recyler.c"
+            versionCode == 57932 -> "com.dragon.read.recyler.c"
+            versionCode < 58732 -> {
                 kotlin.runCatching {
-                    settingClz.findMethod(dragonClassloader, "a", "com.dragon.read.recyler.c")
+                    "com.dragon.read.recyler.c".findClass(dragonClassloader)
                     return@lazy "com.dragon.read.recyler.c"
-                }
-                kotlin.runCatching {
-                    settingClz.findMethod(dragonClassloader, "a", "com.dragon.read.recyler.d")
-                    return@lazy "com.dragon.read.recyler.d"
                 }
                 "com.dragon.read.base.recyler.c"
             }
+            else -> "com.dragon.read.recyler.d"
         }
     }
 
