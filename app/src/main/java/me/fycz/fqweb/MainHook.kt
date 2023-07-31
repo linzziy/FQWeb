@@ -366,7 +366,7 @@ class MainHook : IXposedHookLoadPackage {
                         frpcServer?.currentServer = frpcServer?.servers!![which]
                         et_interface.setText(frpcServer?.currentServer?.name)
                         SPUtils.putString("selectServer", frpcServer?.currentServer?.name)
-                        ToastUtils.toast("接口已切换，重启应用后生效")
+                        if (frpcServer?.isAlive == true) ToastUtils.toast("服务接口已切换，重启应用后生效")
                         dialog.dismiss()
                     }
                     .show()
