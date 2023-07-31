@@ -19,7 +19,7 @@ import java.io.File
  * @date 2023/7/24 13:53
  * @description
  */
-class FrpcServer {
+class FrpcServer() {
     private var myThread: Thread? = null
 
     private var heartThread: Thread? = null
@@ -38,10 +38,16 @@ class FrpcServer {
 
     var traversalConfig: NATTraversalConfig? = null
 
+    val servers get() = traversalConfig?.servers
+
     var currentServer: ServerConfig? = null
 
     private val configFile: File by lazy {
         File(GlobalApp.application?.filesDir?.absolutePath + "/frpc.ini")
+    }
+
+    init {
+        initConfig(false) {  }
     }
 
     fun start(manual: Boolean = false) {
@@ -68,7 +74,7 @@ class FrpcServer {
         }
     }
 
-    private fun initConfig(callback: () -> Unit) {
+    fun initConfig(isStart: Boolean = true, callback: () -> Unit) {
         Thread {
             var throwable: Throwable? = null
             for (i in 1..retry) {
@@ -77,15 +83,15 @@ class FrpcServer {
                     if (json.isEmpty()) throw RuntimeException("json数据为空")
                     traversalConfig = JsonUtils.fromJson(json, NATTraversalConfig::class.java)
                     if (traversalConfig?.enable != true) {
-                        ToastUtils.toastLong("内网穿透服务已关闭")
+                        if (isStart) ToastUtils.toastLong("内网穿透服务已关闭")
                         return@Thread
                     }
                     if (BuildConfig.VERSION_CODE < traversalConfig!!.minVersion!!) {
-                        ToastUtils.toastLong("当前番茄Web版本过低，已不支持内网穿透服务")
+                        if (isStart) ToastUtils.toastLong("当前番茄Web版本过低，已不支持内网穿透服务")
                         return@Thread
                     }
                     if (traversalConfig!!.servers.isNullOrEmpty()) {
-                        ToastUtils.toastLong("当前没有可用的内网穿透服务")
+                        if (isStart) ToastUtils.toastLong("当前没有可用的内网穿透服务")
                         return@Thread
                     }
                     throwable = null
@@ -96,7 +102,7 @@ class FrpcServer {
                 }
             }
             if (throwable != null) {
-                ToastUtils.toastLong("无法获取内网穿透服务配置，请更新番茄Web到最新版后重试\n${throwable.localizedMessage}")
+                if (isStart) ToastUtils.toastLong("无法获取内网穿透服务配置，请更新番茄Web到最新版后重试\n${throwable.localizedMessage}")
                 return@Thread
             }
             val selectServer = SPUtils.getString("selectServer")
@@ -109,7 +115,7 @@ class FrpcServer {
             if (currentServer == null) {
                 currentServer = traversalConfig!!.servers!!.firstOrNull { it.check() }
             }
-            writeConfig(callback)
+            if (isStart) writeConfig(callback)
         }.start()
     }
 

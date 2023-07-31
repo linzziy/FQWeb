@@ -298,23 +298,6 @@ class MainHook : IXposedHookLoadPackage {
             linearlayout_9.addView(textview_10, layoutParams_13)
             val s_enable_2 = Switch(context).apply {
                 isChecked = SPUtils.getBoolean("traversal", false)
-                setOnClickListener {
-                    if (isChecked) {
-                        AlertDialog.Builder(context)
-                            .setTitle("内网穿透风险警告和免责声明")
-                            .setMessage(Html.fromHtml(TRAVERSAL_DISCLAIMER))
-                            .setCancelable(false)
-                            .setPositiveButton("我已阅读并同意") { _, _ ->
-                                isChecked = true
-                                frpcEnable = true
-                            }.setNegativeButton("不同意") { _, _ ->
-                                isChecked = false
-                                frpcEnable = false
-                            }.show()
-                    } else {
-                        frpcEnable = false
-                    }
-                }
             }
             val layoutParams_14 = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -322,6 +305,95 @@ class MainHook : IXposedHookLoadPackage {
             )
             linearlayout_9.addView(s_enable_2, layoutParams_14)
             linearlayout_0.addView(linearlayout_9, layoutParams_12)
+
+            val linearlayout_12 = LinearLayout(context).apply {
+                visibility = if (SPUtils.getBoolean("traversal", false)) View.VISIBLE else View.GONE
+            }
+            val layoutParams_20 = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            linearlayout_12.setPadding(
+                dp2px(context, 10F),
+                dp2px(context, 10F),
+                dp2px(context, 10F),
+                dp2px(context, 10F)
+            )
+            linearlayout_12.orientation = LinearLayout.HORIZONTAL
+
+            val textview_13 = TextView(context)
+            val layoutParams_21 = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            textview_13.text = "当前接口(点击切换)："
+            textview_13.setTextColor(textColor)
+            textview_13.textSize = 16F
+            linearlayout_12.addView(textview_13, layoutParams_21)
+            val et_interface = EditText(context).apply {
+                isSingleLine = true
+                isEnabled = false
+            }
+            val layoutParams_22 = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            et_interface.setText(frpcServer?.currentServer?.name ?: "没有可用接口")
+            et_interface.setTextColor(textColor)
+            et_interface.textSize = 16F
+            linearlayout_12.addView(et_interface, layoutParams_22)
+
+            linearlayout_12.setOnClickListener {
+                if (frpcServer?.traversalConfig == null) {
+                    ToastUtils.toast("接口获取失败，正在重试")
+                    frpcServer?.initConfig(false) {}
+                    return@setOnClickListener
+                }
+                if (frpcServer?.servers.isNullOrEmpty()) {
+                    ToastUtils.toast("当前没有可用服务接口")
+                    return@setOnClickListener
+                }
+                val itemNames = Array(frpcServer?.servers?.size!!) {
+                    val server = frpcServer?.servers!![it]
+                    return@Array server.name + " by " + server.owner
+                }
+                AlertDialog.Builder(context)
+                    .setTitle("选择接口")
+                    .setSingleChoiceItems(
+                        itemNames,
+                        frpcServer?.servers!!.indexOf(frpcServer?.currentServer)
+                    ) { dialog, which ->
+                        frpcServer?.currentServer = frpcServer?.servers!![which]
+                        et_interface.setText(frpcServer?.currentServer?.name)
+                        SPUtils.putString("selectServer", frpcServer?.currentServer?.name)
+                        ToastUtils.toast("接口已切换，重启应用后生效")
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
+
+            linearlayout_0.addView(linearlayout_12, layoutParams_20)
+
+            s_enable_2.setOnClickListener {
+                if (s_enable_2.isChecked) {
+                    AlertDialog.Builder(context)
+                        .setTitle("内网穿透风险警告和免责声明")
+                        .setMessage(Html.fromHtml(TRAVERSAL_DISCLAIMER))
+                        .setCancelable(false)
+                        .setPositiveButton("我已阅读并同意") { _, _ ->
+                            s_enable_2.isChecked = true
+                            frpcEnable = true
+                            linearlayout_12.visibility = View.VISIBLE
+                        }.setNegativeButton("不同意") { _, _ ->
+                            s_enable_2.isChecked = false
+                            frpcEnable = false
+                            linearlayout_12.visibility = View.GONE
+                        }.show()
+                } else {
+                    frpcEnable = false
+                    linearlayout_12.visibility = View.GONE
+                }
+            }
 
             if (SPUtils.getBoolean("traversal", false)) {
                 val linearlayout_10 = LinearLayout(context)
