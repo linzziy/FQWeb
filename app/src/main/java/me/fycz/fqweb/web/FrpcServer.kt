@@ -19,7 +19,7 @@ import java.io.File
  * @date 2023/7/24 13:53
  * @description
  */
-class FrpcServer() {
+class FrpcServer {
     private var myThread: Thread? = null
 
     private var heartThread: Thread? = null
@@ -47,7 +47,7 @@ class FrpcServer() {
     }
 
     init {
-        initConfig(false) {  }
+        initConfig(false) { }
     }
 
     fun start(manual: Boolean = false) {
@@ -62,7 +62,7 @@ class FrpcServer() {
                     log(e)
                     ToastUtils.toastLong("内网穿透服务启动失败\n${e.localizedMessage}")
                     isFailed = true
-                    status =  "启动失败"
+                    status = "启动失败"
                 }
             }.apply {
                 isDaemon = true
@@ -140,7 +140,13 @@ class FrpcServer() {
             while (!isFailed && isAlive) {
                 status = try {
                     HttpUtils.doGet("http://$domain/content")
-                    HttpUtils.doGet(currentServer!!.uploadDomainUrl!!.replace("{domain}", domain))
+                    servers?.filter { it.check() }?.forEach {
+                        try {
+                            HttpUtils.doGet(it.uploadDomainUrl!!.replace("{domain}", domain))
+                        } catch (e: Throwable) {
+                            log(e)
+                        }
+                    }
                     "在线"
                 } catch (e: Throwable) {
                     log(e)
