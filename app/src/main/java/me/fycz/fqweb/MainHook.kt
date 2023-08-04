@@ -52,8 +52,6 @@ class MainHook : IXposedHookLoadPackage {
 
     private var frpcServer: FrpcServer? = null
 
-    private lateinit var modulePath: String
-
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         if (lpparam.packageName == "com.dragon.read") {
             GlobalApp.initClassLoader(lpparam.classLoader)
@@ -417,6 +415,53 @@ class MainHook : IXposedHookLoadPackage {
                 textview_11.textSize = 16F
                 linearlayout_10.addView(textview_11, layoutParams_16)
                 linearlayout_0.addView(linearlayout_10, layoutParams_15)
+
+                //token
+                val linearlayout_13 = LinearLayout(context)
+                val layoutParams_23 = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                linearlayout_13.setPadding(
+                    dp2px(context, 10F),
+                    dp2px(context, 10F),
+                    dp2px(context, 10F),
+                    dp2px(context, 10F)
+                )
+                linearlayout_13.orientation = LinearLayout.HORIZONTAL
+
+                val textview_14 = TextView(context)
+                val layoutParams_24 = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                textview_14.text = "Token(点击重新生成)："
+                textview_14.setTextColor(textColor)
+                textview_14.textSize = 16F
+                linearlayout_13.addView(textview_14, layoutParams_24)
+                val et_token = EditText(context).apply {
+                    isSingleLine = true
+                }
+                val layoutParams_25 = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                et_token.setText(frpcServer?.token)
+                et_token.setTextColor(textColor)
+                et_token.textSize = 16F
+                linearlayout_13.addView(et_token, layoutParams_25)
+
+                textview_14.setOnClickListener {
+                    AlertDialog.Builder(context)
+                        .setTitle("重新生成Token")
+                        .setMessage("确定要重新生成Token吗？")
+                        .setPositiveButton("确认") { _, _ ->
+                            frpcServer?.reGenerateToken()
+                            et_token.setText(frpcServer?.token)
+                        }.setNegativeButton("取消", null)
+                        .show()
+                }
+                linearlayout_0.addView(linearlayout_13, layoutParams_23)
 
                 //公网地址
                 val linearlayout_11 = LinearLayout(context)

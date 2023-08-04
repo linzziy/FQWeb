@@ -13,6 +13,7 @@ import me.fycz.fqweb.utils.callStaticMethod
 import me.fycz.fqweb.utils.findClass
 import me.fycz.fqweb.utils.log
 import java.io.File
+import java.util.Random
 
 /**
  * @author fengyue
@@ -33,6 +34,8 @@ class FrpcServer {
     var status: String = "未启动"
 
     var domain: String = "未获取"
+
+    var token: String = ""
 
     private val retry: Int = 1
 
@@ -130,8 +133,17 @@ class FrpcServer {
             currentServer!!.frpcConfig!!.replace("{port}", SPUtils.getInt("port", 9999).toString())
                 .replace("{timestamp}", timestamp).replace("{domain}", domain)
         configFile.writeText(config)
+        token = SPUtils.getString("token", "")!!
+        if (token.isEmpty()) {
+            reGenerateToken()
+        }
         uploadDomain()
         callback()
+    }
+
+    fun reGenerateToken() {
+        token = getRandomStr(12)
+        SPUtils.putString("token", token)
     }
 
     private fun uploadDomain() {
@@ -142,7 +154,10 @@ class FrpcServer {
                     HttpUtils.doGet("http://$domain/content")
                     servers?.filter { it.check() }?.forEach {
                         try {
-                            HttpUtils.doGet(it.uploadDomainUrl!!.replace("{domain}", domain))
+                            HttpUtils.doGet(
+                                it.uploadDomainUrl!!.replace("{domain}", domain)
+                                    .replace("{token}", token)
+                            )
                         } catch (e: Throwable) {
                             log(e)
                         }
@@ -160,5 +175,26 @@ class FrpcServer {
         }.also {
             it.start()
         }
+    }
+
+    //生成随机数字和字母
+    private fun getRandomStr(length: Int): String {
+        val sb = StringBuilder()
+        val random = Random()
+
+        //参数length，表示生成几位随机数
+        for (i in 0 until length) {
+            //输出字母还是数字
+            when (if (random.nextInt(2) % 2 == 0) "char" else "num") {
+                "char" -> {
+                    //输出是大写字母还是小写字母
+                    val temp = if (random.nextInt(2) % 2 == 0) 65 else 97
+                    sb.append((random.nextInt(26) + temp).toChar())
+                }
+
+                "num" -> sb.append(random.nextInt(10).toString())
+            }
+        }
+        return sb.toString()
     }
 }
