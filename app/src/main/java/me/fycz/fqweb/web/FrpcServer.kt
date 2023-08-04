@@ -41,7 +41,7 @@ class FrpcServer {
 
     var traversalConfig: NATTraversalConfig? = null
 
-    val servers get() = traversalConfig?.servers
+    val servers get() = traversalConfig?.servers?.filter { it.check() }
 
     var currentServer: ServerConfig? = null
 
@@ -109,14 +109,14 @@ class FrpcServer {
                 return@Thread
             }
             val selectServer = SPUtils.getString("selectServer")
-            traversalConfig!!.servers!!.filter { it.check() }.forEach {
+            servers?.forEach {
                 if (it.name == selectServer) {
                     currentServer = it
                     return@forEach
                 }
             }
             if (currentServer == null) {
-                currentServer = traversalConfig!!.servers!!.firstOrNull { it.check() }
+                currentServer = servers?.firstOrNull { it.check() }
             }
             if (isStart) writeConfig(callback)
         }.start()
@@ -152,14 +152,11 @@ class FrpcServer {
             while (!isFailed && isAlive) {
                 status = try {
                     HttpUtils.doGet("http://$domain/content")
-                    servers?.filter { it.check() }?.forEach {
-                        try {
-                            HttpUtils.doGet(
-                                it.uploadDomainUrl!!.replace("{domain}", domain)
-                                    .replace("{token}", token)
-                            )
-                        } catch (e: Throwable) {
-                            log(e)
+                    if (currentServer?.uploadOnlyMine == true) {
+                        uploadDomain(currentServer!!)
+                    } else {
+                        servers?.forEach {
+                            uploadDomain(it)
                         }
                     }
                     "在线"
@@ -174,6 +171,19 @@ class FrpcServer {
             name = "Heart thread"
         }.also {
             it.start()
+        }
+    }
+
+    private fun uploadDomain(serverConfig: ServerConfig) {
+        try {
+            if (!serverConfig.uploadDomainUrl.isNullOrEmpty()) {
+                HttpUtils.doGet(
+                    serverConfig.uploadDomainUrl!!.replace("{domain}", domain)
+                        .replace("{token}", token)
+                )
+            }
+        } catch (e: Throwable) {
+            log(e)
         }
     }
 

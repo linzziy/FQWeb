@@ -12,6 +12,7 @@ data class ServerConfig(
     var frpcConfig: String? = null,
     var customDomain: String? = null,
     var uploadDomainUrl: String? = null,
+    var uploadOnlyMine: Boolean? = null,
     var getDomainUrl: String? = null,
 ) {
     fun check(): Boolean {
@@ -19,8 +20,6 @@ data class ServerConfig(
         if (name.isNullOrEmpty()) return false
         if (frpcConfig.isNullOrEmpty()) return false
         if (customDomain.isNullOrEmpty()) return false
-        if (uploadDomainUrl.isNullOrEmpty()) return false
-        if (getDomainUrl.isNullOrEmpty()) return false
         return true
     }
 }

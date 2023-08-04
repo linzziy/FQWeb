@@ -11,6 +11,7 @@
       "sourceUrl": "http://list.api-fanqienovel.sunianyun.live",
       "customDomain": "{timestamp}.api-fanqienovel.sunianyun.live",
       "uploadDomainUrl": "http://list.api-fanqienovel.sunianyun.live/upload?domain={domain}&token={token}",
+      "uploadOnlyMine": false,
       "getDomainUrl": "http://list.api-fanqienovel.sunianyun.live/random"
     },
     {
@@ -21,6 +22,7 @@
       "sourceUrl": "http://list.fqapi.jilulu.cn",
       "customDomain": "{timestamp}.fqapi.jilulu.cn",
       "uploadDomainUrl": "http://list.fqapi.jilulu.cn/upload?domain={domain}&token={token}",
+      "uploadOnlyMine": false,
       "getDomainUrl": "http://list.fqapi.jilulu.cn/random"
     }
   ]
