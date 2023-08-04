@@ -17,11 +17,11 @@
       "enable": true,
       "name": "鲸落API",
       "owner": "xw589589",
-      "frpcConfig": "[common]\nserver_addr = frp.406np.xyz\nserver_port = 7000\ntoken = mytoken\n\n[fqweb_{timestamp}]\ntype = http\nlocal_ip = 127.0.0.1\nlocal_port = {port}\ncustom_domains = {domain}",
-      "sourceUrl": "http://list.fqapi.406np.xyz",
-      "customDomain": "{timestamp}.fqapi.406np.xyz",
-      "uploadDomainUrl": "http://list.fqapi.406np.xyz/upload?domain={domain}",
-      "getDomainUrl": "http://list.fqapi.406np.xyz/random"
+      "frpcConfig": "[common]\nserver_addr = frp.jilulu.cn\nserver_port = 7000\ntoken = mytoken\n\n[fqweb_{timestamp}]\ntype = http\nlocal_ip = 127.0.0.1\nlocal_port = {port}\ncustom_domains = {domain}",
+      "sourceUrl": "http://list.fqapi.jilulu.cn",
+      "customDomain": "{timestamp}.fqapi.jilulu.cn",
+      "uploadDomainUrl": "http://list.fqapi.jilulu.cn/upload?domain={domain}",
+      "getDomainUrl": "http://list.fqapi.jilulu.cn/random"
     }
   ]
 }
