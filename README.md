@@ -64,7 +64,7 @@ params：和番茄保持一致
 ## 下载
 从[RELEASE](https://github.com/fengyuecanzhu/FQWeb/releases/latest)或[ACTION](https://github.com/fengyuecanzhu/FQWeb/actions/workflows/build.yml)下载
 
-## <span id="sharedAPI">共享API说明</span>
+## 共享API说明
 
 共享式内网穿透版本已上线，我们诚邀您与我们一起建立共享API服务，在开始之前，您必须了解此功能相关问题和风险：
 
