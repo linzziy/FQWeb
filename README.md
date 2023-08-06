@@ -10,8 +10,6 @@
 
 ## 共享API
 
-[共享API说明](#sharedAPI)
-
 感谢[苏念](https://github.com/sunianOvO)和[鲸落](https://github.com/xw589589)提供的服务器支持
 
 苏念API：http://list.api-fanqienovel.sunianyun.live
