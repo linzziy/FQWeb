@@ -152,7 +152,7 @@ class FrpcServer {
             while (!isFailed && isAlive) {
                 status = try {
                     HttpUtils.doGet("http://$domain/content")
-                    if (currentServer?.uploadOnlyMine == true) {
+                    if (currentServer?.uploadOnlySelf == true) {
                         uploadDomain(currentServer!!)
                     } else {
                         servers?.forEach {

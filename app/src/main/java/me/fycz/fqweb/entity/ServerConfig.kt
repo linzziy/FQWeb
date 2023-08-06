@@ -12,7 +12,7 @@ data class ServerConfig(
     var frpcConfig: String? = null,
     var customDomain: String? = null,
     var uploadDomainUrl: String? = null,
-    var uploadOnlyMine: Boolean? = null,
+    var uploadOnlySelf: Boolean? = null,
     var getDomainUrl: String? = null,
 ) {
     fun check(): Boolean {
