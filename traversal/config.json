@@ -26,12 +26,12 @@
       "getDomainUrl": "http://list.fqapi.jilulu.cn/random"
     },
     {
-      "enable": false,
+      "enable": true,
       "name": "玖玖API",
       "owner": "jiujiu",
-      "frpcConfig": "[common]\nserver_addr = frp.sfacg.link\nserver_port = 9999\ntoken = jiujiu\n\n[fqweb_{timestamp}]\ntype = http\nlocal_ip = 127.0.0.1\nlocal_port = {port}\ncustom_domains = {domain}",
+      "frpcConfig": "[common]\nserver_addr = frp.sfacg.link\nserver_port = 9999\ntoken = jiujiu\n\n[fqweb_{timestamp}]\ntype = http\nlocal_ip = 127.0.0.1\nlocal_port = {port}\ncustom_domains = {timestamp}.fqapi.sfacg.link",
       "sourceUrl": "http://list.fqapi.sfacg.link",
-      "customDomain": "{timestamp}.fqapi.sfacg.link",
+      "customDomain": "{timestamp}.fqapi.sfacg.link:10000",
       "uploadDomainUrl": "http://list.fqapi.sfacg.link/upload?domain={domain}&token={token}",
       "getDomainUrl": "http://list.fqapi.sfacg.link/random"
     }
