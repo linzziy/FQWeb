@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
@@ -158,7 +159,11 @@ class MainHook : IXposedHookLoadPackage {
     fun dialog(context: Context, adapter: Any?, settingView: Any) {
         val textColor = Color.parseColor("#060606")
 
-        val layout_root = LinearLayout(context)
+        val layout_root = ScrollView(context)
+        layout_root.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         layout_root.setPadding(
             dp2px(context, 10F),
             dp2px(context, 10F),
