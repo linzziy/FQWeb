@@ -28,7 +28,7 @@ object DragonService {
         GlobalApp.getClassloader()
     }
 
-    fun search(keyword: String, page: Int = 1): Any {
+    fun search(keyword: String, page: Int = 1, tabType: Int = 1): Any {
         val GetSearchPageRequest =
             "${Config.rpcModelPackage}.GetSearchPageRequest".findClass(dragonClassLoader)
         val getSearchPageRequest = GetSearchPageRequest.newInstance()
@@ -47,7 +47,7 @@ object DragonService {
         getSearchPageRequest.setObjectField(
             "tabType", "${Config.rpcModelPackage}.SearchTabType"
                 .findClass(dragonClassLoader)
-                .callStaticMethod("findByValue", arrayOf(Int::class.java), 1)
+                .callStaticMethod("findByValue", arrayOf(Int::class.java), tabType)
         )
         getSearchPageRequest.setShortField("userIsLogin", 1)
         setField(getSearchPageRequest, "offset", (page - 1) * 10)
