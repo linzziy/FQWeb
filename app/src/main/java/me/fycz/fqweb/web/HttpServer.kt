@@ -56,7 +56,7 @@ class HttpServer(port: Int) : NanoHTTPD(port) {
                     byteArray.size.toLong()
                 )
             } else {
-                newFixedLengthResponse( Response.Status.OK, "application/json", JsonUtils.toJson(returnData))
+                newFixedLengthResponse(Response.Status.OK, "application/json", JsonUtils.toJson(returnData))
             }
             response.addHeader("Access-Control-Allow-Methods", "GET, POST")
             response.addHeader("Access-Control-Allow-Origin", session.headers["origin"])
