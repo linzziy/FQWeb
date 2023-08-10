@@ -43,20 +43,24 @@ class HttpServer(port: Int) : NanoHTTPD(port) {
             if (returnData == null) {
                 return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_HTML, defaultPage)
             }
-            val response = if (returnData.data is Bitmap) {
-                val outputStream = ByteArrayOutputStream()
-                (returnData.data as Bitmap).compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-                val byteArray = outputStream.toByteArray()
-                outputStream.close()
-                val inputStream = ByteArrayInputStream(byteArray)
-                newFixedLengthResponse(
-                    Response.Status.OK,
-                    "image/png",
-                    inputStream,
-                    byteArray.size.toLong()
-                )
-            } else {
-                newFixedLengthResponse(Response.Status.OK, "application/json", JsonUtils.toJson(returnData))
+            val response = when (returnData.data) {
+                is Bitmap -> {
+                    val outputStream = ByteArrayOutputStream()
+                    (returnData.data as Bitmap).compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                    val byteArray = outputStream.toByteArray()
+                    outputStream.close()
+                    val inputStream = ByteArrayInputStream(byteArray)
+                    newFixedLengthResponse(
+                        Response.Status.OK,
+                        "image/png",
+                        inputStream,
+                        byteArray.size.toLong()
+                    )
+                }
+
+                else -> {
+                    newFixedLengthResponse(Response.Status.OK, "application/json", JsonUtils.toJson(returnData))
+                }
             }
             response.addHeader("Access-Control-Allow-Methods", "GET, POST")
             response.addHeader("Access-Control-Allow-Origin", session.headers["origin"])
