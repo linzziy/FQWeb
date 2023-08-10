@@ -30,8 +30,14 @@ class HttpServer(port: Int) : NanoHTTPD(port) {
                     "/info" -> DragonController.info(parameters)
                     "/catalog" -> DragonController.catalog(parameters)
                     "/content" -> DragonController.content(parameters)
-                    "/reading/bookapi/bookmall/cell/change/v1/" -> DragonController.bookMall(parameters)
-                    "/reading/bookapi/new_category/landing/v/" -> DragonController.newCategory(parameters)
+                    "/reading/bookapi/bookmall/cell/change/v1/" -> DragonController.bookMall(
+                        parameters
+                    )
+
+                    "/reading/bookapi/new_category/landing/v/" -> DragonController.newCategory(
+                        parameters
+                    )
+
                     else -> null
                 }
             }/* else if (session.method == Method.POST) {
@@ -46,7 +52,11 @@ class HttpServer(port: Int) : NanoHTTPD(port) {
             val response = when (returnData.data) {
                 is Bitmap -> {
                     val outputStream = ByteArrayOutputStream()
-                    (returnData.data as Bitmap).compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                    (returnData.data as Bitmap).compress(
+                        Bitmap.CompressFormat.PNG,
+                        100,
+                        outputStream
+                    )
                     val byteArray = outputStream.toByteArray()
                     outputStream.close()
                     val inputStream = ByteArrayInputStream(byteArray)
@@ -58,9 +68,11 @@ class HttpServer(port: Int) : NanoHTTPD(port) {
                     )
                 }
 
-                else -> {
-                    newFixedLengthResponse(Response.Status.OK, "application/json", JsonUtils.toJson(returnData))
-                }
+                else -> newFixedLengthResponse(
+                    Response.Status.OK,
+                    "application/json",
+                    JsonUtils.toJson(returnData)
+                )
             }
             response.addHeader("Access-Control-Allow-Methods", "GET, POST")
             response.addHeader("Access-Control-Allow-Origin", session.headers["origin"])
