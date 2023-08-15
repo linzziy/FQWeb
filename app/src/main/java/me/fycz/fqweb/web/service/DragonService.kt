@@ -93,7 +93,7 @@ object DragonService {
     }
 
     fun decodeContent(itemContent: Any): Any {
-        return "com.dragon.read.reader.bookend.a.a".findClass(dragonClassLoader)
+        return Config.decodeContentClz.findClass(dragonClassLoader)
             .new(null).callMethod("a", itemContent)!!.callMethod("blockingFirst")!!
     }
 

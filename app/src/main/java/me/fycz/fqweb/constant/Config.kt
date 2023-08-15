@@ -17,7 +17,7 @@ object Config {
     }
 
     const val TRAVERSAL_CONFIG_URL =
-        "https://gitee.com/fengyuecanzhu/FQWeb/raw/master/traversal/config.json"
+        "https://gitee.com/fengyuecanzhu/FQWeb-Server/raw/main/config/client.json"
 
     const val DEFAULT_USER_AGENT =
         "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4168.3 Safari/537.36"
@@ -112,6 +112,13 @@ object Config {
                 }
                 "$rpcApiPackage.f"
             }
+        }
+    }
+
+    val decodeContentClz: String by lazy {
+        when{
+            versionCode < 58932 -> "com.dragon.read.reader.bookend.a.a"
+            else -> "com.dragon.read.reader.bookend.b"
         }
     }
 

@@ -1,6 +1,7 @@
 package me.fycz.fqweb.web.controller
 
 import me.fycz.fqweb.utils.getObjectField
+import me.fycz.fqweb.utils.log
 import me.fycz.fqweb.web.ReturnData
 import me.fycz.fqweb.web.service.DragonService
 
@@ -50,9 +51,12 @@ object DragonController {
         if (itemId.isNullOrEmpty()) {
             return returnData.setErrorMsg("参数item_id不能为空")
         }
-        val content = DragonService.getContent(itemId)
-        kotlin.runCatching {
-            DragonService.decodeContent(content.getObjectField("data") as Any)
+        val content = DragonService.getContent(itemId).apply {
+            try {
+                DragonService.decodeContent(this.getObjectField("data") as Any)
+            } catch (e: Throwable) {
+                log("Decode Content item_id=$itemId error：\n${e.stackTraceToString()}")
+            }
         }
         returnData.setData(content)
         return returnData
