@@ -38,23 +38,20 @@ jobs:
           chmod +x gradlew
           ./gradlew :app:assembleAppRelease --build-cache --parallel --daemon --warning-mode all
           ./gradlew -Pfrpc :app:assembleFrpcRelease --build-cache --parallel --daemon --warning-mode all
-      - name: Upload Artifact(app)
+      - name: Organize the Files
+        run: |
+          mkdir -p ${{ github.workspace }}/apk/
+          cp -rf ${{ github.workspace }}/app/build/outputs/apk/*/*/*.apk ${{ github.workspace }}/apk/
+      - name: Upload Lanzou
+        run: |
+          echo "上传APP至蓝奏云"
+          versionName=$(sed -n 's/versionName = "\(.*\)"/\1/p' ${{ github.workspace }}/app/build.gradle.kts)
+          gitHead=$(git rev-parse --short HEAD)
+          tag_name=$versionName-$gitHead
+          echo "versionName=$versionName"
+          python3 $GITHUB_WORKSPACE/keystore/scripts/lzy.py "${{ github.workspace }}/apk/" "8227905" "$tag_name"
+      - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: FQWeb
-          path: ${{ github.workspace }}/app/build/outputs/apk/app/release/FQWeb*.apk
-      - name: Upload Artifact(frpc-arm64)
-        uses: actions/upload-artifact@v3
-        with:
-          name: FQWeb-frpc-arm64
-          path: ${{ github.workspace }}/app/build/outputs/apk/frpc/release/FQWeb*arm64-v8a.apk
-      - name: Upload Artifact(frpc-arm32)
-        uses: actions/upload-artifact@v3
-        with:
-          name: FQWeb-frpc-arm32
-          path: ${{ github.workspace }}/app/build/outputs/apk/frpc/release/FQWeb*armeabi-v7a.apk
-      - name: Upload Artifact(frpc-armAll)
-        uses: actions/upload-artifact@v3
-        with:
-          name: FQWeb-frpc-armAll
-          path: ${{ github.workspace }}/app/build/outputs/apk/frpc/release/FQWeb*armAll.apk
+          path: ${{ github.workspace }}/下载地址.txt

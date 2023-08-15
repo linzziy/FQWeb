@@ -19,8 +19,8 @@ android {
         applicationId = "me.fycz.fqweb"
         minSdk = 24
         targetSdk = 33
-        versionCode = 146
-        versionName = "1.4.6"
+        versionCode = 150
+        versionName = "1.5.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
