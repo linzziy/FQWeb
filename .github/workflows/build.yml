@@ -45,10 +45,20 @@ jobs:
       - name: Upload Lanzou
         run: |
           echo "上传APP至蓝奏云"
-          versionName=$(sed -n 's/versionName = "\(.*\)"/\1/p' ${{ github.workspace }}/app/build.gradle.kts)
+          versionName=$(sed -n 's/versionName = "\(.*\)"/\1/p' ${{ github.workspace }}/app/build.gradle.kts | tr -d '[:space:]')
           gitHead=$(git rev-parse --short HEAD)
           tag_name=$versionName-$gitHead
-          echo "versionName=$versionName"
+          echo "tag_name=tag_name"
+          folder_path="${{ github.workspace }}/apk"
+          for file in "$folder_path"/*; do
+            if [ -f "$file" ]; then
+              filename=$(basename "$file")
+              extension="${filename##*.}"
+              filename_without_extension="${filename%.*}"
+              new_filename="${filename_without_extension}-${gitHead}.${extension}"
+              mv "$file" "$folder_path/$new_filename"
+            fi
+          done
           python3 $GITHUB_WORKSPACE/keystore/scripts/lzy.py "${{ github.workspace }}/apk/" "8227905" "$tag_name"
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
