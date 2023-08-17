@@ -18,6 +18,9 @@ import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import me.fycz.fqweb.constant.Config
@@ -65,6 +68,7 @@ class MainHook : IXposedHookLoadPackage {
                     GlobalApp.application = app
                     log("versionCode = ${Config.versionCode}")
                     SPUtils.init(app)
+                    initAppCenter(app)
                     hookSetting(lpparam.classLoader)
                     hookUpdate(lpparam.classLoader)
                     httpServer = HttpServer(SPUtils.getInt("port", 9999))
@@ -82,6 +86,15 @@ class MainHook : IXposedHookLoadPackage {
                 }
             }
         }
+    }
+
+    private fun initAppCenter(app: Application) {
+        AppCenter.start(
+            app,
+            "c8eff10e-d31e-4920-9231-b3eadae32545",
+            Analytics::class.java,
+            Crashes::class.java
+        )
     }
 
     private fun getProcessName(context: Context): String {

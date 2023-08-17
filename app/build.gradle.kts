@@ -109,6 +109,11 @@ dependencies {
     //frpc
     "frpcImplementation"(files("libs/frpclib.aar"))
 
+    //AppCenter
+    val appCenterSdkVersion = "5.0.0"
+    implementation("com.microsoft.appcenter:appcenter-analytics:$appCenterSdkVersion")
+    implementation("com.microsoft.appcenter:appcenter-crashes:$appCenterSdkVersion")
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

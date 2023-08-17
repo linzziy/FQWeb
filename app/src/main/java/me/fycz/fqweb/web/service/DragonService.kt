@@ -131,6 +131,7 @@ object DragonService {
                     obj
                 )!!.callMethod("blockingFirst")!!
         } catch (e: Throwable) {
+            log(e)
             e.stackTraceToString()
         }
     }
