@@ -12,7 +12,7 @@
 
 感谢[苏念](https://github.com/sunianOvO)、[鲸落](https://github.com/xw589589)和玖玖提供的服务器支持
 
-苏念API：http://list.api-fanqienovel.sunianyun.live
+苏念API：http://reading.api-fanqienovel.sunianyun.live
 
 鲸落API：http://list.fqapi.jilulu.cn
 
