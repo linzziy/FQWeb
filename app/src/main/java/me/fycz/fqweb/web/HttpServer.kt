@@ -28,6 +28,7 @@ class HttpServer(port: Int) : NanoHTTPD(port) {
                 returnData = when (uri) {
                     "/search" -> DragonController.search(parameters)
                     "/info" -> DragonController.info(parameters)
+                    "/minfo" -> DragonController.mInfo(parameters)
                     "/catalog" -> DragonController.catalog(parameters)
                     "/content" -> DragonController.content(parameters)
                     "/reading/bookapi/bookmall/cell/change/v1/" -> DragonController.bookMall(parameters)

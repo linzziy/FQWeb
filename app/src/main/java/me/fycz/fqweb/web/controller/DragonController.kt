@@ -35,6 +35,16 @@ object DragonController {
         return returnData
     }
 
+    fun mInfo(parameters: Map<String, MutableList<String>>): ReturnData {
+        val bookId = parameters["book_id"]?.firstOrNull()
+        val returnData = ReturnData()
+        if (bookId.isNullOrEmpty()) {
+            return returnData.setErrorMsg("参数book_id不能为空")
+        }
+        returnData.setData(DragonService.getMInfo(bookId))
+        return returnData
+    }
+
     fun catalog(parameters: Map<String, MutableList<String>>): ReturnData {
         val bookId = parameters["book_id"]?.firstOrNull()
         val returnData = ReturnData()

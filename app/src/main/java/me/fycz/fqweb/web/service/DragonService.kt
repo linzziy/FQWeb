@@ -70,6 +70,17 @@ object DragonService {
         )
     }
 
+    fun getMInfo(bookId: String): Any {
+        val MBookDetailRequest =
+            "${Config.rpcModelPackage}.MBookDetailRequest".findClass(dragonClassLoader)
+        val mBookDetailRequest = MBookDetailRequest.newInstance()
+        mBookDetailRequest.setLongField("bookId", bookId.toLong())
+        return callFunction(
+            clzName = "${Config.rpcApiPackage}.a",
+            obj = mBookDetailRequest
+        )
+    }
+
     fun getCatalog(bookId: String): Any {
         val GetDirectoryForItemIdRequest =
             "${Config.rpcModelPackage}.GetDirectoryForItemIdRequest".findClass(dragonClassLoader)

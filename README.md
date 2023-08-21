@@ -40,7 +40,8 @@ url：http://localhost:9999/search?query=关键字&page=页数
 ### 获取书籍详情
 ```
 method：GET
-url：http://localhost:9999/info?book_id=书籍ID
+url1：http://localhost:9999/info?book_id=书籍ID
+url2：http://localhost:9999/minfo?book_id=书籍ID
 ```
 ### 获取书籍目录
 ```
