@@ -74,7 +74,7 @@ object DragonService {
         val MBookDetailRequest =
             "${Config.rpcModelPackage}.MBookDetailRequest".findClass(dragonClassLoader)
         val mBookDetailRequest = MBookDetailRequest.newInstance()
-        mBookDetailRequest.setLongField("bookId", bookId.toLong())
+        mBookDetailRequest.setObjectField("bookId", bookId)
         return callFunction(
             clzName = "${Config.rpcApiPackage}.a",
             obj = mBookDetailRequest
