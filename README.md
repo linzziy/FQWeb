@@ -25,7 +25,7 @@ Web服务可在番茄小说设置界面开启，默认运行在9999端口
 
 书源和适配番茄版本蓝奏云链接：[点此下载](https://fycz.lanzoum.com/b00o3g1kf)
 
-免root lspatch集成版：[番茄小说](https://www.123pan.com/s/ib9LVv-IHiwd.html)，集成版不会进行维护和支持其他版本，且用且珍惜
+~~免root lspatch集成版（已失效）：[番茄小说](https://www.123pan.com/s/ib9LVv-IHiwd.html)~~
 
 如需适配其他版本，请发[Issue](https://github.com/fengyuecanzhu/FQWeb/issues/new)并附上对应apk
 
