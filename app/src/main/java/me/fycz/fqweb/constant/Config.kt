@@ -16,7 +16,7 @@ object Config {
         "frpclib.Frpclib".findClassOrNull(javaClass.classLoader) != null
     }
 
-    const val FQ_HOST_URL = "https://api5-normal-lf.fqnovel.com"
+    const val FQ_HOST_URL = "https://api5-normal-sinfonlineb.fqnovel.com"
 
     const val TRAVERSAL_CONFIG_URL =
         "https://gitee.com/fengyuecanzhu/FQWeb-Server/raw/main/config/client.json"

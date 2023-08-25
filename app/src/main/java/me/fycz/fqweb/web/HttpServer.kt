@@ -33,8 +33,8 @@ class HttpServer(port: Int) : NanoHTTPD(port) {
                     "/minfo" -> DragonController.mInfo(parameters)
                     "/catalog" -> DragonController.catalog(parameters)
                     "/content" -> DragonController.content(parameters)
-                    /*"/reading/bookapi/bookmall/cell/change/v1/" -> DragonController.bookMall(parameters)
-                    "/reading/bookapi/new_category/landing/v/" -> DragonController.newCategory(parameters)*/
+                    "/reading/bookapi/bookmall/cell/change/v1/" -> DragonController.bookMall(parameters)
+                    "/reading/bookapi/new_category/landing/v/" -> DragonController.newCategory(parameters)
                     else -> null
                 }
             }/* else if (session.method == Method.POST) {
