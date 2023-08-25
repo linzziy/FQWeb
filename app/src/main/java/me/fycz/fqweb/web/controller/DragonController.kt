@@ -1,5 +1,7 @@
 package me.fycz.fqweb.web.controller
 
+import me.fycz.fqweb.constant.Config
+import me.fycz.fqweb.utils.HttpUtils
 import me.fycz.fqweb.utils.getObjectField
 import me.fycz.fqweb.utils.log
 import me.fycz.fqweb.web.ReturnData
@@ -84,4 +86,13 @@ object DragonController {
         return returnData
     }
 
+    fun anyUrl(uri: String, paramString: String): ReturnData {
+        val returnData = ReturnData()
+        try {
+            returnData.setData(HttpUtils.doGet("${Config.FQ_HOST_URL}$uri?$paramString"))
+        } catch (e: Throwable) {
+            returnData.setErrorMsg(e.stackTraceToString())
+        }
+        return returnData
+    }
 }

@@ -151,15 +151,19 @@ class FrpcServer {
             Thread.sleep(1000)
             while (!isFailed && isAlive) {
                 status = try {
-                    HttpUtils.doGet("http://$domain/content")
-                    if (currentServer?.uploadOnlySelf == true) {
-                        uploadDomain(currentServer!!)
-                    } else {
-                        servers?.forEach {
-                            uploadDomain(it)
+                    val res = HttpUtils.doGet("http://$domain/content?item_id=1")
+                    if (res.contains("该书不存在")) {
+                        if (currentServer?.uploadOnlySelf == true) {
+                            uploadDomain(currentServer!!)
+                        } else {
+                            servers?.forEach {
+                                uploadDomain(it)
+                            }
                         }
+                        "在线"
+                    } else {
+                        "无效"
                     }
-                    "在线"
                 } catch (e: Throwable) {
                     log(e)
                     "离线"

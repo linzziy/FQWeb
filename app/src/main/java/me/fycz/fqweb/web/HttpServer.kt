@@ -2,6 +2,8 @@ package me.fycz.fqweb.web
 
 import android.graphics.Bitmap
 import fi.iki.elonen.NanoHTTPD
+import me.fycz.fqweb.constant.Config
+import me.fycz.fqweb.utils.HttpUtils
 import me.fycz.fqweb.utils.JsonUtils
 import me.fycz.fqweb.web.controller.DragonController
 import java.io.ByteArrayInputStream
@@ -31,8 +33,8 @@ class HttpServer(port: Int) : NanoHTTPD(port) {
                     "/minfo" -> DragonController.mInfo(parameters)
                     "/catalog" -> DragonController.catalog(parameters)
                     "/content" -> DragonController.content(parameters)
-                    "/reading/bookapi/bookmall/cell/change/v1/" -> DragonController.bookMall(parameters)
-                    "/reading/bookapi/new_category/landing/v/" -> DragonController.newCategory(parameters)
+                    /*"/reading/bookapi/bookmall/cell/change/v1/" -> DragonController.bookMall(parameters)
+                    "/reading/bookapi/new_category/landing/v/" -> DragonController.newCategory(parameters)*/
                     else -> null
                 }
             }/* else if (session.method == Method.POST) {
@@ -41,8 +43,15 @@ class HttpServer(port: Int) : NanoHTTPD(port) {
                 session.parseBody(files)
                 val postBody = files["postData"]
             }*/
-            if (returnData == null) {
+            if (uri == "/") {
                 return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_HTML, defaultPage)
+            }
+            if (returnData == null) {
+                return newFixedLengthResponse(
+                    Response.Status.OK,
+                    "application/json",
+                    HttpUtils.doGet("${Config.FQ_HOST_URL}$uri?${session.queryParameterString}")
+                )
             }
             val response = when (returnData.data) {
                 is Bitmap -> {
@@ -72,7 +81,7 @@ class HttpServer(port: Int) : NanoHTTPD(port) {
             response.addHeader("Access-Control-Allow-Methods", "GET, POST")
             response.addHeader("Access-Control-Allow-Origin", session.headers["origin"])
             return response
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             return newFixedLengthResponse(e.stackTraceToString())
         }
     }
