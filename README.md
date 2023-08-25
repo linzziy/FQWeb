@@ -63,6 +63,12 @@ method：GET
 url：http://localhost:9999/reading/bookapi/new_category/landing/v/
 params：和番茄保持一致
 ```
+### 任意Url
+```
+method：GET
+url：http://localhost:9999/{anyUrl}
+params：和番茄保持一致
+```
 
 ## 下载
 从[RELEASE](https://github.com/fengyuecanzhu/FQWeb/releases/latest)或[ACTION](https://github.com/fengyuecanzhu/FQWeb/actions/workflows/build.yml)下载
