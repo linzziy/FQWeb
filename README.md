@@ -61,7 +61,7 @@ params：和番茄api"/reading/bookapi/bookmall/cell/change/v1/"保持一致
 
 method：GET
 url：http://localhost:9999/category
-params：和番茄api"/reading/bookapi/bookmall/cell/change/v1/"保持一致
+params：和番茄api"/reading/bookapi/new_category/landing/v/"保持一致
 ```
 ### 任意Url
 ```
