@@ -183,7 +183,7 @@ class FrpcServer {
             if (!serverConfig.uploadDomainUrl.isNullOrEmpty()) {
                 HttpUtils.doGet(
                     serverConfig.uploadDomainUrl!!.replace("{domain}", domain)
-                        .replace("{token}", token)
+                        .replace("{token}", token) + "&version=${BuildConfig.VERSION_CODE}"
                 )
             }
         } catch (e: Throwable) {
