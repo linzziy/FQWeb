@@ -142,7 +142,7 @@ class FrpcServer {
     }
 
     fun reGenerateToken() {
-        token = getRandomStr(12)
+        token = getRandomStr(24)
         SPUtils.putString("token", token)
     }
 
