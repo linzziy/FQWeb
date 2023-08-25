@@ -69,7 +69,7 @@ method：GET
 url：http://localhost:9999/{anyUrl}
 params：和番茄保持一致
 ```
-注：此接口仅对[此域名](https://github.com/fengyuecanzhu/FQWeb/blob/a6f62313584196f37907b2f713ba0742dc96fe11/app/src/main/java/me/fycz/fqweb/constant/Config.kt#L19)做请求转发
+注：此接口仅对[此域名](https://api5-normal-lf.fqnovel.com)做请求转发
 
 ## 下载
 从[RELEASE](https://github.com/fengyuecanzhu/FQWeb/releases/latest)或[ACTION](https://github.com/fengyuecanzhu/FQWeb/actions/workflows/build.yml)下载
