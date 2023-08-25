@@ -57,17 +57,17 @@ url：http://localhost:9999/content?item_id=章节itemId
 ```
 method：GET
 url：http://localhost:9999/bookmall
-params：和番茄保持一致
+params：和番茄api"/reading/bookapi/bookmall/cell/change/v1/"保持一致
 
 method：GET
 url：http://localhost:9999/category
-params：和番茄保持一致
+params：和番茄api"/reading/bookapi/bookmall/cell/change/v1/"保持一致
 ```
 ### 任意Url
 ```
 method：GET
 url：http://localhost:9999/{anyUrl}
-params：和番茄保持一致
+params：和番茄对应保持一致
 ```
 注：此接口仅对[此域名](https://api5-normal-sinfonlineb.fqnovel.com)做请求转发
 
