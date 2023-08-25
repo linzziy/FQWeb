@@ -47,11 +47,15 @@ class HttpServer(port: Int) : NanoHTTPD(port) {
                 return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_HTML, defaultPage)
             }
             if (returnData == null) {
-                return newFixedLengthResponse(
-                    Response.Status.OK,
-                    "application/json",
-                    HttpUtils.doGet("${Config.FQ_HOST_URL}$uri?${session.queryParameterString}")
-                )
+                return try {
+                    newFixedLengthResponse(
+                        Response.Status.OK,
+                        "application/json",
+                        HttpUtils.doGet("${Config.FQ_HOST_URL}$uri?${session.queryParameterString}")
+                    )
+                } catch (e: Throwable) {
+                    newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_HTML, defaultPage)
+                }
             }
             val response = when (returnData.data) {
                 is Bitmap -> {
