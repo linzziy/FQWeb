@@ -56,11 +56,11 @@ url：http://localhost:9999/content?item_id=章节itemId
 ### 获取发现书籍
 ```
 method：GET
-url：http://localhost:9999/reading/bookapi/bookmall/cell/change/v1/
+url：http://localhost:9999/bookmall
 params：和番茄保持一致
 
 method：GET
-url：http://localhost:9999/reading/bookapi/new_category/landing/v/
+url：http://localhost:9999/category
 params：和番茄保持一致
 ```
 ### 任意Url
