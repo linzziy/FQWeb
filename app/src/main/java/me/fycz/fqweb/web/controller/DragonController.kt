@@ -89,7 +89,7 @@ object DragonController {
     fun anyUrl(uri: String, paramString: String): ReturnData {
         val returnData = ReturnData()
         try {
-            returnData.setData(HttpUtils.doGet("${Config.FQ_HOST_URL}$uri?$paramString"))
+            returnData.setData(HttpUtils.doFQGet("${Config.FQ_HOST_URL}$uri?$paramString"))
         } catch (e: Throwable) {
             returnData.setErrorMsg(e.stackTraceToString())
         }

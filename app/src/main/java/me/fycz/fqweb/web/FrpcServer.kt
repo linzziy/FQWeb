@@ -181,7 +181,7 @@ class FrpcServer {
     private fun uploadDomain(serverConfig: ServerConfig) {
         try {
             if (!serverConfig.uploadDomainUrl.isNullOrEmpty()) {
-                HttpUtils.doGet(
+                HttpUtils.doFQGet(
                     serverConfig.uploadDomainUrl!!.replace("{domain}", domain)
                         .replace("{token}", token) + "&version=${BuildConfig.VERSION_CODE}"
                 )

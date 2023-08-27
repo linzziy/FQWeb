@@ -51,7 +51,7 @@ class HttpServer(port: Int) : NanoHTTPD(port) {
                     newFixedLengthResponse(
                         Response.Status.OK,
                         "application/json",
-                        HttpUtils.doGet("${Config.FQ_HOST_URL}$uri?${session.queryParameterString}")
+                        HttpUtils.doFQGet("${Config.FQ_HOST_URL}$uri?${session.queryParameterString}")
                     )
                 } catch (e: Throwable) {
                     newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_HTML, defaultPage)
