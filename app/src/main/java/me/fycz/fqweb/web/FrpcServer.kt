@@ -153,18 +153,14 @@ class FrpcServer {
                 status = try {
                     val res = HttpUtils.doGet("http://$domain/content?item_id=1")
                     if (res.contains("该书不存在")) {
-                        if (currentServer?.uploadOnlySelf == true) {
-                            uploadDomain(currentServer!!)
-                        } else {
-                            servers?.forEach {
-                                uploadDomain(it)
-                            }
-                        }
+                        updateStatus()
                         "在线"
                     } else {
+                        updateStatus(true)
                         "无效"
                     }
                 } catch (e: Throwable) {
+                    updateStatus(true)
                     log(e)
                     "离线"
                 }
@@ -178,6 +174,24 @@ class FrpcServer {
         }
     }
 
+    private fun updateStatus(isRemove: Boolean = false) {
+        if (currentServer?.uploadOnlySelf == true) {
+            if (isRemove) {
+                removeDomain(currentServer!!)
+            } else {
+                uploadDomain(currentServer!!)
+            }
+        } else {
+            servers?.forEach {
+                if (isRemove) {
+                    removeDomain(it)
+                } else {
+                    uploadDomain(it)
+                }
+            }
+        }
+    }
+
     private fun uploadDomain(serverConfig: ServerConfig) {
         try {
             if (!serverConfig.uploadDomainUrl.isNullOrEmpty()) {
@@ -185,6 +199,16 @@ class FrpcServer {
                     serverConfig.uploadDomainUrl!!.replace("{domain}", domain)
                         .replace("{token}", token) + "&version=${BuildConfig.VERSION_CODE}"
                 )
+            }
+        } catch (e: Throwable) {
+            log(e)
+        }
+    }
+
+    private fun removeDomain(serverConfig: ServerConfig) {
+        try {
+            if (!serverConfig.uploadDomainUrl.isNullOrEmpty()) {
+                HttpUtils.doGet("${serverConfig.url!!}/remove?token=$token")
             }
         } catch (e: Throwable) {
             log(e)

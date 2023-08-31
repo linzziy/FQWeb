@@ -9,6 +9,7 @@ data class ServerConfig(
     var enable: Boolean? = null,
     var name: String? = null,
     var owner: String? = null,//可空
+    var url: String? = null,
     var frpcConfig: String? = null,
     var customDomain: String? = null,
     var uploadDomainUrl: String? = null,
@@ -18,6 +19,7 @@ data class ServerConfig(
     fun check(): Boolean {
         if (enable != true) return false
         if (name.isNullOrEmpty()) return false
+        if (url.isNullOrEmpty()) return false
         if (frpcConfig.isNullOrEmpty()) return false
         if (customDomain.isNullOrEmpty()) return false
         return true
