@@ -6,9 +6,11 @@ import android.app.AlertDialog
 import android.app.Application
 import android.content.Context
 import android.graphics.Color
+import android.text.Editable
 import android.text.Html
 import android.text.InputFilter
 import android.text.InputType
+import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.ViewGroup
@@ -288,6 +290,7 @@ class MainHook : IXposedHookLoadPackage {
 
         var frpcEnable = SPUtils.getBoolean("traversal", false)
 
+        var token = ""
         if (isFrpcVersion) {
             val linearlayout_9 = LinearLayout(context)
             val layoutParams_12 = LinearLayout.LayoutParams(
@@ -457,6 +460,15 @@ class MainHook : IXposedHookLoadPackage {
                 linearlayout_13.addView(textview_14, layoutParams_24)
                 val et_token = EditText(context).apply {
                     isSingleLine = true
+                    addTextChangedListener(object : TextWatcher {
+                        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int, ) {}
+
+                        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int, ) {}
+
+                        override fun afterTextChanged(s: Editable) {
+                            token = s.toString()
+                        }
+                    })
                 }
                 val layoutParams_25 = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -589,6 +601,14 @@ class MainHook : IXposedHookLoadPackage {
                     if (frpcEnable) {
                         frpcServer?.start(true)
                         SPUtils.putBoolean("traversal", true)
+                        if (token != frpcServer?.token) {
+                            if (token.length < 12) {
+                                ToastUtils.toast("自定义Token长度不能低于12")
+                            } else {
+                                frpcServer?.token = token
+                                SPUtils.putString("token", token)
+                            }
+                        }
                     } else {
                         SPUtils.putBoolean("traversal", false)
                         ToastUtils.toast("内网穿透服务配置将在重启应用后生效")
