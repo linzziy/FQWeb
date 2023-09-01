@@ -313,7 +313,7 @@ class MainHook : IXposedHookLoadPackage {
         textview_awake.textSize = 16F
         linearlayout_awake.addView(textview_awake, layoutParams_text_awake)
         val s_awake = Switch(context).apply {
-            isChecked = SPUtils.getBoolean("wakelock", false)
+            isChecked = httpServer.wakeLock.isHeld
             setOnClickListener {
                 if (isChecked) {
                     SystemUtils.ignoreBatteryOptimization(context)
