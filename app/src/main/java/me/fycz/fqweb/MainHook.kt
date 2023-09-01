@@ -329,7 +329,7 @@ class MainHook : IXposedHookLoadPackage {
 
         var frpcEnable = SPUtils.getBoolean("traversal", false)
 
-        var token = ""
+        var token = SPUtils.getString("token") ?: ""
         if (isFrpcVersion) {
             val linearlayout_9 = LinearLayout(context)
             val layoutParams_12 = LinearLayout.LayoutParams(
