@@ -11,6 +11,7 @@ import android.text.Html
 import android.text.InputFilter
 import android.text.InputType
 import android.text.TextWatcher
+import android.text.method.DigitsKeyListener
 import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.ViewGroup
@@ -26,8 +27,8 @@ import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import me.fycz.fqweb.constant.Config
 import me.fycz.fqweb.constant.Config.DISCLAIMER
-import me.fycz.fqweb.constant.Config.isFrpcVersion
 import me.fycz.fqweb.constant.Config.TRAVERSAL_DISCLAIMER
+import me.fycz.fqweb.constant.Config.isFrpcVersion
 import me.fycz.fqweb.utils.GlobalApp
 import me.fycz.fqweb.utils.NetworkUtils
 import me.fycz.fqweb.utils.SPUtils
@@ -461,14 +462,33 @@ class MainHook : IXposedHookLoadPackage {
                 val et_token = EditText(context).apply {
                     isSingleLine = true
                     addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int, ) {}
+                        override fun beforeTextChanged(
+                            s: CharSequence,
+                            start: Int,
+                            count: Int,
+                            after: Int
+                        ) {}
 
-                        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int, ) {}
+                        override fun onTextChanged(
+                            s: CharSequence,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                        ) {}
 
                         override fun afterTextChanged(s: Editable) {
                             token = s.toString()
                         }
                     })
+                    keyListener = object : DigitsKeyListener() {
+                        override fun getInputType(): Int {
+                            return InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
+                        }
+
+                        override fun getAcceptedChars(): CharArray {
+                            return "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
+                        }
+                    }
                 }
                 val layoutParams_25 = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
