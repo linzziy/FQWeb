@@ -602,11 +602,11 @@ class MainHook : IXposedHookLoadPackage {
                         frpcServer?.start(true)
                         SPUtils.putBoolean("traversal", true)
                         if (token != frpcServer?.token) {
-                            if (token.length < 12) {
-                                ToastUtils.toast("自定义Token长度不能低于12")
-                            } else {
+                            if (token.length in 12..24) {
                                 frpcServer?.token = token
                                 SPUtils.putString("token", token)
+                            } else {
+                                ToastUtils.toast("自定义Token长度必须在12-24位之间")
                             }
                         }
                     } else {
