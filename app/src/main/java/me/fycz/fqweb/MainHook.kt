@@ -625,6 +625,7 @@ class MainHook : IXposedHookLoadPackage {
                             if (token.length in 12..24) {
                                 frpcServer?.token = token
                                 SPUtils.putString("token", token)
+                                ToastUtils.toast("自定义Token保存成功")
                             } else {
                                 ToastUtils.toast("自定义Token长度必须在12-24位之间")
                             }
