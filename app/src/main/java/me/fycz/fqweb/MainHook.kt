@@ -1,6 +1,7 @@
 package me.fycz.fqweb
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.ActivityManager
 import android.app.AlertDialog
 import android.app.Application
@@ -32,6 +33,7 @@ import me.fycz.fqweb.constant.Config.isFrpcVersion
 import me.fycz.fqweb.utils.GlobalApp
 import me.fycz.fqweb.utils.NetworkUtils
 import me.fycz.fqweb.utils.SPUtils
+import me.fycz.fqweb.utils.SystemUtils
 import me.fycz.fqweb.utils.ToastUtils
 import me.fycz.fqweb.utils.callMethod
 import me.fycz.fqweb.utils.findClass
@@ -112,6 +114,7 @@ class MainHook : IXposedHookLoadPackage {
     }
 
     private fun hookSetting(classLoader: ClassLoader) {
+        var settingActivity: Activity? = null
         var adapter: Any? = null
         "com.dragon.read.component.biz.impl.mine.settings.SettingsActivity"
             .hookAfterMethod(
@@ -119,13 +122,13 @@ class MainHook : IXposedHookLoadPackage {
                 "a",
                 Config.settingRecyclerAdapterClz.findClass(classLoader)
             ) {
+                settingActivity = it.thisObject as Activity
                 adapter = it.thisObject.getObjectField(Config.settingAdapterFiledName)
                 val list = it.result as LinkedList<Any>
                 if (list[0].getObjectField(Config.settingItemStrFieldName) != "Web服务") {
-                    val context = it.thisObject as Context
                     val setting =
                         Config.settingItemQSNClz.findClass(classLoader)
-                            .new(context)
+                            .new(settingActivity)
                     setting.setObjectField(Config.settingItemStrFieldName, "Web服务")
                     setting.setObjectField(
                         Config.settingItemSubStrFieldName,
@@ -148,20 +151,19 @@ class MainHook : IXposedHookLoadPackage {
                 "com.dragon.read.pages.mine.settings.e".findClass(classLoader),
                 Int::class.java
             ) {
-                val context = (it.args[0] as View).context
                 if (it.args[1].getObjectField(Config.settingItemStrFieldName) == "Web服务") {
                     if (!SPUtils.getBoolean("disclaimer", false)) {
-                        AlertDialog.Builder(context)
+                        AlertDialog.Builder(settingActivity)
                             .setTitle("免责声明")
                             .setCancelable(true)
                             .setMessage(DISCLAIMER)
                             .setPositiveButton("同意并继续") { _, _ ->
-                                dialog(context, adapter, it.args[1])
+                                dialog(settingActivity!!, adapter, it.args[1])
                                 SPUtils.putBoolean("disclaimer", true)
                             }.setNegativeButton("不同意", null)
                             .show()
                     } else {
-                        dialog(context, adapter, it.args[1])
+                        dialog(settingActivity!!, adapter, it.args[1])
                     }
                 } else {
                     it.invokeOriginalMethod()
@@ -170,7 +172,7 @@ class MainHook : IXposedHookLoadPackage {
     }
 
     @SuppressLint("SetTextI18n")
-    fun dialog(context: Context, adapter: Any?, settingView: Any) {
+    fun dialog(context: Activity, adapter: Any?, settingView: Any) {
         val textColor = Color.parseColor("#060606")
 
         val layout_root = ScrollView(context)
@@ -288,6 +290,42 @@ class MainHook : IXposedHookLoadPackage {
         )
         linearlayout_7.addView(s_enable, layoutParams_9)
         linearlayout_0.addView(linearlayout_7, layoutParams_7)
+
+        val linearlayout_awake = LinearLayout(context)
+        val layoutParams_awake = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        linearlayout_awake.setPadding(
+            dp2px(context, 10F),
+            dp2px(context, 10F),
+            dp2px(context, 10F),
+            dp2px(context, 10F)
+        )
+        linearlayout_awake.orientation = LinearLayout.HORIZONTAL
+        val textview_awake = TextView(context)
+        val layoutParams_text_awake = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        textview_awake.text = "开启唤醒锁："
+        textview_awake.setTextColor(textColor)
+        textview_awake.textSize = 16F
+        linearlayout_awake.addView(textview_awake, layoutParams_text_awake)
+        val s_awake = Switch(context).apply {
+            isChecked = SPUtils.getBoolean("wakelock", false)
+            setOnClickListener {
+                if (isChecked) {
+                    SystemUtils.ignoreBatteryOptimization(context)
+                }
+            }
+        }
+        val layoutParams_switch_awake = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        linearlayout_awake.addView(s_awake, layoutParams_switch_awake)
+        linearlayout_0.addView(linearlayout_awake, layoutParams_awake)
 
         var frpcEnable = SPUtils.getBoolean("traversal", false)
 
@@ -466,15 +504,17 @@ class MainHook : IXposedHookLoadPackage {
                             s: CharSequence,
                             start: Int,
                             count: Int,
-                            after: Int
-                        ) {}
+                            after: Int,
+                        ) {
+                        }
 
                         override fun onTextChanged(
                             s: CharSequence,
                             start: Int,
                             before: Int,
-                            count: Int
-                        ) {}
+                            count: Int,
+                        ) {
+                        }
 
                         override fun afterTextChanged(s: Editable) {
                             token = s.toString()
@@ -616,6 +656,13 @@ class MainHook : IXposedHookLoadPackage {
                     httpServer.stop()
                     settingView.setObjectField(Config.settingItemSubStrFieldName, "未开启")
                     adapter?.callMethod("notifyItemChanged", 0)
+                }
+                if (s_awake.isChecked) {
+                    SPUtils.putBoolean("wakelock", true)
+                    httpServer.wakeLock.acquire()
+                } else {
+                    SPUtils.putBoolean("wakelock", false)
+                    httpServer.wakeLock.release()
                 }
                 if (isFrpcVersion) {
                     if (frpcEnable) {

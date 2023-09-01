@@ -1,10 +1,14 @@
 package me.fycz.fqweb.web
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.os.PowerManager
 import fi.iki.elonen.NanoHTTPD
 import me.fycz.fqweb.constant.Config
+import me.fycz.fqweb.utils.GlobalApp
 import me.fycz.fqweb.utils.HttpUtils
 import me.fycz.fqweb.utils.JsonUtils
+import me.fycz.fqweb.utils.SPUtils
 import me.fycz.fqweb.web.controller.DragonController
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -15,6 +19,24 @@ import java.io.ByteArrayOutputStream
  * @description
  */
 class HttpServer(port: Int) : NanoHTTPD(port) {
+
+    val wakeLock: PowerManager.WakeLock by lazy {
+        (GlobalApp.application!!.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
+            newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "FQWeb::HttpServerWakelockTag").apply {
+                setReferenceCounted(false)
+            }
+        }
+    }
+
+    override fun start() {
+        super.start()
+        if (SPUtils.getBoolean("wakelock", false)) wakeLock.acquire()
+    }
+
+    override fun stop() {
+        super.stop()
+        if (SPUtils.getBoolean("wakelock", false)) wakeLock.release()
+    }
 
     private val defaultPage =
         "<!DOCTYPE html>\n<html>\n<head>\n    <title>Not Found</title>\n    <style>\n    body {\n        width: 35em;\n        margin: 0 auto;\n        font-family: Tahoma, Verdana, Arial, sans-serif;\n    }\n\n    </style>\n</head>\n<body>\n<h1><a href=\"https://github.com/fengyuecanzhu/FQWeb\">FQWeb</a>: 404 Not Found.</h1>\n<p>Sorry, the page you are looking for does not exist.</p>\n<p>The server is powered by <a href=\"https://github.com/fengyuecanzhu/FQWeb\">FQWeb</a>.</p>\n<p><em>Faithfully yours, FQWeb.</em></p>\n</body>\n</html>"
