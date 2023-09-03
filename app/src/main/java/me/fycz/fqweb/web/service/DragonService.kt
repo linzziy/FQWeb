@@ -104,8 +104,14 @@ object DragonService {
     }
 
     fun decodeContent(itemContent: Any): Any {
-        return Config.decodeContentClz.findClass(dragonClassLoader)
-            .new(null).callMethod("a", itemContent)!!.callMethod("blockingFirst")!!
+        val bVar = if (Config.versionCode < 59317) {
+            Config.decodeContentClz.findClass(dragonClassLoader)
+                .new(null)
+        } else {
+            Config.decodeContentClz.findClass(dragonClassLoader)
+                .new(null, null, null)
+        }
+        return bVar.callMethod("a", itemContent)!!.callMethod("blockingFirst")!!
     }
 
     fun bookMall(parameters: Map<String, MutableList<String>>): Any {
