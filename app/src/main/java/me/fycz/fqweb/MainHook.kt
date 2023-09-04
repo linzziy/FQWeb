@@ -75,6 +75,7 @@ class MainHook : IXposedHookLoadPackage {
                     initAppCenter(app)
                     hookSetting(lpparam.classLoader)
                     hookUpdate(lpparam.classLoader)
+                    hookOther(lpparam.classLoader)
                     httpServer = HttpServer(SPUtils.getInt("port", 9999))
                     if (isFrpcVersion) frpcServer = FrpcServer()
                     if (!httpServer.isAlive && SPUtils.getBoolean("autoStart", false)) {
@@ -714,5 +715,16 @@ class MainHook : IXposedHookLoadPackage {
             return
         }
         "com.dragon.read.update.d".replaceMethod(classLoader, "a", Int::class.java) {}
+    }
+
+    private fun hookOther(classLoader: ClassLoader) {
+        Config.decodeContentClz
+            .findClass(classLoader)
+            .replaceMethod(
+                "a",
+                String::class.java
+            ) {
+                return@replaceMethod it.args[0]
+            }
     }
 }
