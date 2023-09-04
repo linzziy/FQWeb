@@ -36,6 +36,7 @@ import me.fycz.fqweb.utils.SPUtils
 import me.fycz.fqweb.utils.SystemUtils
 import me.fycz.fqweb.utils.ToastUtils
 import me.fycz.fqweb.utils.callMethod
+import me.fycz.fqweb.utils.callStaticMethod
 import me.fycz.fqweb.utils.findClass
 import me.fycz.fqweb.utils.getObjectField
 import me.fycz.fqweb.utils.hookAfterMethod
@@ -724,7 +725,9 @@ class MainHook : IXposedHookLoadPackage {
                 "a",
                 String::class.java
             ) {
-                return@replaceMethod it.args[0]
+                return@replaceMethod "org.jsoup.a".findClass(classLoader)
+                    .callStaticMethod("c", it.args[0])!!
+                    .callMethod("w", "p")?.toString()
             }
     }
 }
