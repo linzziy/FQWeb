@@ -104,7 +104,7 @@ object DragonService {
     }
 
     fun decodeContent(itemContent: Any): Any {
-        val bVar = if (Config.versionCode < 59317) {
+        val bVar = if (Config.versionCode < 59300) {
             Config.decodeContentClz.findClass(dragonClassLoader)
                 .new(null)
         } else {

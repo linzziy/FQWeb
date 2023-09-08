@@ -37,7 +37,7 @@ object Config {
         when {
             versionCode == 523 -> "com.dragon.read.base.recyler.c"
             versionCode == 57932 -> "com.dragon.read.recyler.c"
-            versionCode < 58732 -> {
+            versionCode < 58700 -> {
                 kotlin.runCatching {
                     "com.dragon.read.recyler.c".findClass(dragonClassloader)
                     return@lazy "com.dragon.read.recyler.c"
@@ -65,14 +65,14 @@ object Config {
 
     val settingAdapterFiledName: String by lazy {
         when {
-            versionCode < 58732 -> "b"
+            versionCode < 58700 -> "b"
             else -> "a"
         }
     }
 
     val settingItemStrFieldName: String by lazy {
         when {
-            versionCode < 58732 -> "e"
+            versionCode < 58700 -> "e"
             else -> "d"
         }
     }
@@ -119,7 +119,7 @@ object Config {
 
     val decodeContentClz: String by lazy {
         when{
-            versionCode < 58932 -> "com.dragon.read.reader.bookend.a.a"
+            versionCode < 58900 -> "com.dragon.read.reader.bookend.a.a"
             else -> "com.dragon.read.reader.bookend.b"
         }
     }
