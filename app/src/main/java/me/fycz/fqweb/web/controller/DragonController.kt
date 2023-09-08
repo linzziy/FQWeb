@@ -63,14 +63,19 @@ object DragonController {
         if (itemId.isNullOrEmpty()) {
             return returnData.setErrorMsg("参数item_id不能为空")
         }
-        val content = DragonService.getContent(itemId).apply {
-            try {
-                DragonService.decodeContent(this.getObjectField("data") as Any)
-            } catch (e: Throwable) {
+        val content = DragonService.getContent(itemId)
+        try {
+            DragonService.decodeContent(content.getObjectField("data") as Any)
+            returnData.setData(content)
+        } catch (e: Throwable) {
+            if (itemId == "1") {
+                returnData.setData(content)
+            } else {
                 log("Decode Content item_id=$itemId error：\n${e.stackTraceToString()}")
+                returnData.setData(e.stackTraceToString())
+                returnData.setErrorMsg("章节item_id=${itemId}内容解密失败，可能是当前番茄版本(${Config.versionCode})未适配或者该章节不存在")
             }
         }
-        returnData.setData(content)
         return returnData
     }
 
