@@ -4,6 +4,7 @@ import de.robv.android.xposed.XposedHelpers
 import me.fycz.fqweb.utils.GlobalApp
 import me.fycz.fqweb.utils.findClass
 import me.fycz.fqweb.utils.findClassOrNull
+import me.fycz.fqweb.utils.new
 
 /**
  * @author fengyue
@@ -121,6 +122,16 @@ object Config {
         when{
             versionCode < 58900 -> "com.dragon.read.reader.bookend.a.a"
             else -> "com.dragon.read.reader.bookend.b"
+        }
+    }
+
+    val decodeContentInstance by lazy {
+        if (versionCode < 59300) {
+            decodeContentClz.findClass(dragonClassloader)
+                .new(null)
+        } else {
+            decodeContentClz.findClass(dragonClassloader)
+                .new(null, null, null)
         }
     }
 
